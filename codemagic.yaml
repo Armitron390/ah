@@ -1,3 +1,25 @@
-git add codemagic.yaml
-git commit -m 'Add first workflow'
-git push
+workflows:
+  build_bitchat_ios:
+    name: Build Bitchat iOS
+    max_build_duration: 60
+    environment:
+      xcode: latest
+      vars:
+        APP_SCHEME: bitchat
+        IOS_SDK: iphoneos
+    scripts:
+      - name: Install XcodeGen
+        script: |
+          brew install xcodegen
+      - name: Generate Xcode project
+        script: |
+          xcodegen generate
+      - name: Build iOS app
+        script: |
+          xcodebuild -scheme $APP_SCHEME -sdk $IOS_SDK -configuration Release build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+    artifacts:
+      - build/Release-iphoneos/**/*.app
+    publishing:
+      email:
+        recipients:
+          - beetjuice369@gmail.com
