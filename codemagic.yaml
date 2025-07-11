@@ -1,6 +1,6 @@
 workflows:
   build_bitchat_ios:
-    name: Build Bitchat (Find Scheme)
+    name: Build Bitchat iOS (No Signing)
     max_build_duration: 60
     environment:
       xcode: latest
@@ -19,7 +19,7 @@ workflows:
         script: |
           xcodebuild \
             -project $APP_PROJECT \
-            -scheme bitchat \   # <-- Replace with your scheme after you find it
+            -scheme "bitchat (iOS)" \
             -configuration Release \
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
