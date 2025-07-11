@@ -1,11 +1,12 @@
 workflows:
   build_bitchat_ios:
-    name: Build Bitchat iOS (No Signing)
+    name: Build Bitchat iOS (Export .app)
     max_build_duration: 60
     environment:
       xcode: latest
       vars:
         APP_PROJECT: "bitchat.xcodeproj"
+        BUILD_DIR: "output"
     scripts:
       - name: Install tools
         script: brew install xcodegen
@@ -23,8 +24,9 @@ workflows:
             -configuration Release \
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
+            -derivedDataPath $BUILD_DIR \
             CODE_SIGNING_ALLOWED=NO \
             build
     artifacts:
-      - build/**/*.app
+      - output/Build/Products/Release-iphoneos/*.app
       - /tmp/xcodebuild_logs/*.log
