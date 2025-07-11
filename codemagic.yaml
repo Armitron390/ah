@@ -1,28 +1,25 @@
 workflows:
   build_bitchat_ios:
-    name: Build Bitchat (No Signing)
+    name: Build Bitchat (Find Scheme)
     max_build_duration: 60
     environment:
       xcode: latest
       vars:
-        APP_SCHEME: "bitchat"
         APP_PROJECT: "bitchat.xcodeproj"
     scripts:
       - name: Install tools
-        script: |
-          brew install xcodegen
+        script: brew install xcodegen
       - name: Generate Xcode project
+        script: xcodegen generate
+      - name: List available Xcode schemes
         script: |
-          xcodegen generate
-      - name: Remove broken Config.xcconfig references
-        script: |
-          sed -i '' '/configFiles/d' project.yml || true
-          xcodegen generate
+          echo "Available schemes:"
+          xcodebuild -list -project $APP_PROJECT
       - name: Build iOS app without signing
         script: |
           xcodebuild \
             -project $APP_PROJECT \
-            -scheme $APP_SCHEME \
+            -scheme bitchat \   # <-- Replace with your scheme after you find it
             -configuration Release \
             -sdk iphoneos \
             -destination 'generic/platform=iOS' \
