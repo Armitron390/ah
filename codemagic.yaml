@@ -14,6 +14,10 @@ workflows:
       - name: Generate Xcode project
         script: |
           xcodegen generate
+      - name: Remove broken Config.xcconfig references
+        script: |
+          sed -i '' '/configFiles/d' project.yml || true
+          xcodegen generate
       - name: Build iOS app without signing
         script: |
           xcodebuild \
@@ -26,3 +30,4 @@ workflows:
             build
     artifacts:
       - build/**/*.app
+      - /tmp/xcodebuild_logs/*.log
